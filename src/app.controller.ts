@@ -1,6 +1,7 @@
 import { Controller, Get } from '@nestjs/common';
 import { AppService } from './app.service';
 import { ConfigService } from '@nestjs/config';
+import ConfigEnum from './enum/configEnum';
 
 @Controller()
 export class AppController {
@@ -11,7 +12,7 @@ export class AppController {
 
   @Get()
   getHello(): string {
-    console.log(this.configService.get('NODE_ENV'));
+    console.log(this.configService.get(ConfigEnum.NODE_ENV));
     return this.appService.getHello();
   }
 }
