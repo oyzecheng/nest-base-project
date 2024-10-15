@@ -11,8 +11,15 @@ export class AppController {
   ) {}
 
   @Get()
-  getHello(): string {
-    console.log(this.configService.get(ConfigEnum.NODE_ENV));
-    return this.appService.getHello();
+  getHello(): {
+    a: any;
+    message: string;
+    env: ConfigService<Record<string, unknown>, false>;
+  } {
+    return {
+      message: this.appService.getHello(),
+      env: this.configService.get('DATABASE_URL'),
+      a: process.env.NODE_ENV,
+    };
   }
 }
