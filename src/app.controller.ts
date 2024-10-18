@@ -1,18 +1,21 @@
 import { Controller, Get } from '@nestjs/common';
 import { AppService } from './app.service';
-import { ConfigService } from '@nestjs/config';
-import ConfigEnum from './enum/configEnum';
+import { RedisService } from './redis/redis.service';
 
 @Controller()
 export class AppController {
   constructor(
     private readonly appService: AppService,
-    private configService: ConfigService,
+    private redis: RedisService,
   ) {}
 
   @Get()
-  getHello(): string {
-    console.log(this.configService.get(ConfigEnum.NODE_ENV));
-    return this.appService.getHello();
+  async getHello(): Promise<any> {
+    await this.redis.set('test', 'test redis value');
+    return {
+      message: this.appService.getHello(),
+      test: await this.redis.get('test'),
+      has: await this.redis.has('test'),
+    };
   }
 }
