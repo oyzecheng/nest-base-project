@@ -4,12 +4,18 @@ export const Pagination = createParamDecorator(
   (data: string | undefined, ctx: ExecutionContext) => {
     const request = ctx.switchToHttp().getRequest();
     const body = request.body;
-    body.page = body.page || 1;
-    body.pageSize = body.pageSize || 10;
-    body.skip = (body.page - 1) * body.pageSize || undefined;
+    const query = request.query;
 
-    if (data) return body[data];
+    const page = +query.page || body.page || 1;
+    const pageSize = +query.pageSize || body.pageSize || 10;
 
-    return body;
+    const pagination = {
+      page,
+      pageSize,
+      skip: (page - 1) * pageSize || 0,
+    };
+
+    if (data) return pagination[data];
+    return pagination;
   },
 );
